@@ -6,13 +6,13 @@
 ## How to generate keystore and truststore for SSL
 
     openssl genrsa -out root.key
-    openssl req -new -x509 -key root.key -out root.crt  (*** Common Name value should be localhost ***)
+    openssl req -new -x509 -key root.key -out root.crt  (*** Common Name value should be kafka ***)
     keytool -keystore kafka.truststore.jks -alias CARoot -import -file root.crt
-    keytool -keystore kafka.keystore.jks -alias localhost -validity 365 -genkey -keyalg RSA -ext SAN=DNS:localhost
-    keytool -keystore kafka.keystore.jks -alias localhost -certreq -file kafka.unsigned.crt
-    openssl x509 -req -CA root.crt -CAkey root.key -in kafka.unsigned.crt -out kafka.signed.crt -days 365 CAcreateserial
+    keytool -keystore kafka.keystore.jks -alias kafka -validity 365 -genkey -keyalg RSA -ext SAN=DNS:kafka
+    keytool -keystore kafka.keystore.jks -alias kafka -certreq -file kafka.unsigned.crt
+    openssl x509 -req -CA root.crt -CAkey root.key -in kafka.unsigned.crt -out kafka.signed.crt -days 365 -CAcreateserial
     keytool -keystore kafka.keystore.jks -alias CARoot -import -file root.crt
-    keytool -keystore kafka.keystore.jks -alias localhost -import -file kafka.signed.crt
+    keytool -keystore kafka.keystore.jks -alias kafka -import -file kafka.signed.crt
 
 
 ## In order to start 
